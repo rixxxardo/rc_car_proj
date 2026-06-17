@@ -24,11 +24,12 @@ class FrameBuffer:      # The main purpose of this class is to help with synchro
 
 
 class Camera:
-    def __init__(self, thread_e, ip, port):
-        self.thread_e = thread_e    # Passed in from rover class, used to manage threads.
+    def __init__(self, thread_e, ip, port, preview=False):
         self.camera   = PiCamera(resolution='640x480', framerate=24)
-        self.preview_ = False
+        self.preview_ = preview
+        self.thread_e = thread_e    # Passed in from rover class, used to manage threads.
         self.frame_buffer = FrameBuffer()
+        
         self.ip_   = ip
         self.port_ = port
         self.server_WebSocket = None
@@ -53,13 +54,16 @@ class Camera:
             self.streaming = True
             self.websocket_thread.start() # Spins websocket server on a separate thread.
             self.camera.start_recording(self.frame_buffer, format='h264', profile='baseline')
-            print("Streaming")
+            print("[Stream started]")
+
             while self.thread_e.is_set():
                 with self.frame_buffer.condition:
                     self.frame_buffer.condition.wait()
                     self.server_WebSocket.manager.broadcast(self.frame_buffer.frame, binary=True)
+        
         except Exception as e:
             print(f"Stream Error: {e}")
+        
         finally:
             print("Terminating stream")
             self.streaming = False
@@ -81,19 +85,3 @@ class Camera:
                 self.camera.stop_preview()
             self.camera.stop_recording()
             self.camera.close()
-
-
-
-
-# e = threading.Event()
-# e.set()     # Trigger camera
-# foo = Camera(e, preview=True)
-
-# try:
-#     foo.rec()
-#     while True:
-#         None
-# except KeyboardInterrupt:
-#     print('\nKeyboard Interrupt.')
-# finally:
-#     print('Terminating')
