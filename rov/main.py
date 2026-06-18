@@ -1,10 +1,11 @@
-import camera_main.camera
 import static_main.static_code
 import RPi.GPIO as GPIO
 import socket
 import threading
 import time
 import serial
+
+from cam.camera import Camera
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -76,7 +77,7 @@ class rover:
         self.ip = rover.ROVER_PHONE_IP              # Command server and camera operate out of this IP
         self.port = rover.ROVER_PORT                # Port used for cmd server
 
-        self.camera = camera_main.camera.Camera(self.streaming_thread_event, self.ip, rover.ROVER_STREAM_PORT)   # Create camera instance
+        self.camera = .Camera(self.streaming_thread_event, self.ip, rover.ROVER_STREAM_PORT)   # Create camera instance
         self.initialize_motors()
 
         self.server_=None
