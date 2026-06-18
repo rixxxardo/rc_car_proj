@@ -65,8 +65,6 @@ class rover:
         # Thread events, these will be used for interprocess communication
         self.streaming_thread_event= threading.Event()   
         self.static_thread_event= threading.Event()          # Camera event
-       # Camera event
-        #self.mapping = threading.Event()                       # LiDar event
 
         # blip controls used with web interface.
         self.blip_fwd_speed  = 75
@@ -88,7 +86,7 @@ class rover:
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((self.ip, self.port))
         self.server.listen(2)
-        
+        a
         # Entry point into the server
         while True:
             print("Waiting for connection")
