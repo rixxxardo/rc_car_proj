@@ -1,4 +1,3 @@
-import static_main.static_code
 import RPi.GPIO as GPIO
 import socket
 import threading
